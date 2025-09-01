@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+  <h1 class="text-3xl font-bold mb-6">🤖 AI Chatbot</h1>
+  
+  <div class="w-full max-w-lg bg-gray-800 p-4 rounded-xl shadow-lg">
+    <div id="chatbox" class="h-96 overflow-y-auto mb-4 p-3 bg-gray-700 rounded"></div>
+    
+    <div class="flex">
+      <input id="userInput" type="text" placeholder="Type your question..." 
+             class="flex-grow p-2 rounded-l bg-gray-600 text-white focus:outline-none">
+      <button onclick="sendMessage()" class="px-4 py-2 bg-blue-500 rounded-r">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const msg = input.value.trim();
+      if(msg === "") return;
+      
+      chatbox.innerHTML += `<p><b>You:</b> ${msg}</p>`;
+      input.value = "";
+
+      // Simple AI response
+      setTimeout(() => {
+        chatbox.innerHTML += `<p><b>Bot:</b> I'm still learning, but I can help you with MBBS resources!</p>`;
+        chatbox.scrollTop = chatbox.scrollHeight;
+      }, 800);
+    }
+  </script>
+</body>
+</html>
