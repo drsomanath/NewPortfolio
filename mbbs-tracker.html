@@ -1,81 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MBBS Progress Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBBS Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px #00c6ff, 0 0 25px #00c6ff;
+    animation: fadeInDown 1s ease;
+  }
+
+  .tracker-container {
+    width: 90%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .year-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    border-left: 5px solid #00c6ff;
+    cursor: pointer;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+  }
+
+  .year-card.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .year-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.6rem;
+    color: #00c6ff;
+  }
+
+  .year-card p {
+    margin: 5px 0;
+    font-size: 1rem;
+    opacity: 0.9;
+  }
+
+  .subjects {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+    padding-left: 15px;
+    margin-top: 10px;
+  }
+
+  .year-card.expanded .subjects {
+    max-height: 500px;
+  }
+
+  /* Progress Bar */
+  .progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #00c6ff, #00ffb3);
+    transition: width 1.5s ease;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
 </head>
-<body class="bg-gray-900 text-white">
-  <div class="min-h-screen flex flex-col items-center justify-center p-6">
-    <h1 class="text-4xl font-bold mb-10 text-cyan-400">🎬 MBBS Cinematic Progress Tracker</h1>
+<body>
+<h1>🎓 MBBS Cinematic Timeline</h1>
 
-    <div id="timeline" class="relative w-full max-w-5xl">
-      <!-- Timeline line -->
-      <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-cyan-500"></div>
+<div class="tracker-container">
 
-      <!-- Year cards -->
-      <div class="space-y-20">
-        <div class="relative flex items-center">
-          <div class="w-1/2 pr-8 text-right">
-            <h2 class="text-2xl font-semibold text-cyan-300">1st Year</h2>
-            <p class="text-gray-300">Anatomy, Physiology, Biochemistry</p>
-          </div>
-          <div class="w-1/2 pl-8"></div>
-        </div>
-
-        <div class="relative flex items-center">
-          <div class="w-1/2 pr-8"></div>
-          <div class="w-1/2 pl-8">
-            <h2 class="text-2xl font-semibold text-cyan-300">2nd Year</h2>
-            <p class="text-gray-300">Pathology, Pharmacology, Microbiology, Forensic Medicine</p>
-          </div>
-        </div>
-
-        <div class="relative flex items-center">
-          <div class="w-1/2 pr-8 text-right">
-            <h2 class="text-2xl font-semibold text-cyan-300">3rd Year</h2>
-            <p class="text-gray-300">ENT, Ophthalmology, Community Medicine</p>
-          </div>
-          <div class="w-1/2 pl-8"></div>
-        </div>
-
-        <div class="relative flex items-center">
-          <div class="w-1/2 pr-8"></div>
-          <div class="w-1/2 pl-8">
-            <h2 class="text-2xl font-semibold text-cyan-300">4th Year</h2>
-            <p class="text-gray-300">Medicine, Surgery, Pediatrics, OBGYN</p>
-          </div>
-        </div>
-
-        <div class="relative flex items-center">
-          <div class="w-1/2 pr-8 text-right">
-            <h2 class="text-2xl font-semibold text-cyan-300">Internship</h2>
-            <p class="text-gray-300">Rotations, Clinical Skills, Patient Care</p>
-          </div>
-          <div class="w-1/2 pl-8"></div>
-        </div>
-      </div>
+  <div class="year-card" data-progress="60">
+    <h2>1st Year</h2>
+    <p>Duration: 12 months</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="subjects">
+      <p>📘 Anatomy</p>
+      <p>📘 Physiology</p>
+      <p>📘 Biochemistry</p>
     </div>
   </div>
 
-  <script>
-    gsap.from("#timeline h2", {
-      y: 50,
-      opacity: 0,
-      stagger: 0.3,
-      duration: 1.2,
-      ease: "power3.out"
+  <div class="year-card" data-progress="30">
+    <h2>2nd Year</h2>
+    <p>Duration: 18 months</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="subjects">
+      <p>📘 Pathology</p>
+      <p>📘 Pharmacology</p>
+      <p>📘 Microbiology</p>
+      <p>📘 Forensic Medicine</p>
+    </div>
+  </div>
+
+  <div class="year-card" data-progress="0">
+    <h2>3rd Year</h2>
+    <p>Duration: 12 months</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="subjects">
+      <p>📘 ENT</p>
+      <p>📘 Ophthalmology</p>
+      <p>📘 Community Medicine</p>
+    </div>
+  </div>
+
+  <div class="year-card" data-progress="0">
+    <h2>4th Year</h2>
+    <p>Duration: 24 months</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="subjects">
+      <p>📘 Medicine</p>
+      <p>📘 Surgery</p>
+      <p>📘 Pediatrics</p>
+      <p>📘 Obstetrics & Gynecology</p>
+      <p>📘 Orthopedics</p>
+    </div>
+  </div>
+
+  <div class="year-card" data-progress="0">
+    <h2>Internship</h2>
+    <p>Duration: 12 months</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="subjects">
+      <p>🏥 Rotations</p>
+      <p>🏥 Clinical Training</p>
+      <p>🏥 Patient Care</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Expand subjects on click
+  const cards = document.querySelectorAll(".year-card");
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      card.classList.toggle("expanded");
     });
-    gsap.from("#timeline p", {
-      y: 30,
-      opacity: 0,
-      stagger: 0.3,
-      duration: 1.2,
-      delay: 0.5,
-      ease: "power2.out"
+  });
+
+  // Scroll animations & progress bar fill
+  function animateOnScroll() {
+    const triggerBottom = window.innerHeight * 0.85;
+
+    cards.forEach(card => {
+      const cardTop = card.getBoundingClientRect().top;
+      if(cardTop < triggerBottom) {
+        card.classList.add("visible");
+        const progressBar = card.querySelector(".progress-bar");
+        const progressValue = card.getAttribute("data-progress");
+        progressBar.style.width = progressValue + "%";
+      }
     });
-  </script>
+  }
+
+  window.addEventListener("scroll", animateOnScroll);
+  window.addEventListener("load", animateOnScroll);
+</script>
 </body>
 </html>
