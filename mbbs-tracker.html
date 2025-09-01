@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBBS Progress Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="min-h-screen flex flex-col items-center justify-center p-6">
+    <h1 class="text-4xl font-bold mb-10 text-cyan-400">🎬 MBBS Cinematic Progress Tracker</h1>
+
+    <div id="timeline" class="relative w-full max-w-5xl">
+      <!-- Timeline line -->
+      <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-cyan-500"></div>
+
+      <!-- Year cards -->
+      <div class="space-y-20">
+        <div class="relative flex items-center">
+          <div class="w-1/2 pr-8 text-right">
+            <h2 class="text-2xl font-semibold text-cyan-300">1st Year</h2>
+            <p class="text-gray-300">Anatomy, Physiology, Biochemistry</p>
+          </div>
+          <div class="w-1/2 pl-8"></div>
+        </div>
+
+        <div class="relative flex items-center">
+          <div class="w-1/2 pr-8"></div>
+          <div class="w-1/2 pl-8">
+            <h2 class="text-2xl font-semibold text-cyan-300">2nd Year</h2>
+            <p class="text-gray-300">Pathology, Pharmacology, Microbiology, Forensic Medicine</p>
+          </div>
+        </div>
+
+        <div class="relative flex items-center">
+          <div class="w-1/2 pr-8 text-right">
+            <h2 class="text-2xl font-semibold text-cyan-300">3rd Year</h2>
+            <p class="text-gray-300">ENT, Ophthalmology, Community Medicine</p>
+          </div>
+          <div class="w-1/2 pl-8"></div>
+        </div>
+
+        <div class="relative flex items-center">
+          <div class="w-1/2 pr-8"></div>
+          <div class="w-1/2 pl-8">
+            <h2 class="text-2xl font-semibold text-cyan-300">4th Year</h2>
+            <p class="text-gray-300">Medicine, Surgery, Pediatrics, OBGYN</p>
+          </div>
+        </div>
+
+        <div class="relative flex items-center">
+          <div class="w-1/2 pr-8 text-right">
+            <h2 class="text-2xl font-semibold text-cyan-300">Internship</h2>
+            <p class="text-gray-300">Rotations, Clinical Skills, Patient Care</p>
+          </div>
+          <div class="w-1/2 pl-8"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    gsap.from("#timeline h2", {
+      y: 50,
+      opacity: 0,
+      stagger: 0.3,
+      duration: 1.2,
+      ease: "power3.out"
+    });
+    gsap.from("#timeline p", {
+      y: 30,
+      opacity: 0,
+      stagger: 0.3,
+      duration: 1.2,
+      delay: 0.5,
+      ease: "power2.out"
+    });
+  </script>
+</body>
+</html>
