@@ -1,40 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Chatbot</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematic AI Chatbot</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* Floating Chat Button */
+  #chat-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #00c6ff;
+    color: #000;
+    font-size: 1.5rem;
+    padding: 15px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    z-index: 1000;
+    transition: transform 0.2s;
+  }
+  #chat-btn:hover { transform: scale(1.1); }
+
+  /* Chatbox */
+  #chat-box {
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    width: 350px;
+    max-width: 90%;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform 0.5s ease;
+    z-index: 1000;
+  }
+  #chat-box.active { transform: translateY(0); }
+
+  .chat-header {
+    background: rgba(0,198,255,0.7);
+    padding: 12px 15px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #000;
+  }
+  #close-chat { cursor: pointer; }
+
+  .chat-messages {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .message {
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s forwards;
+  }
+  .user-msg { align-self: flex-end; background: #00c6ff; color: #000; }
+  .ai-msg { align-self: flex-start; background: #00ffb3; color: #000; position: relative; }
+
+  .typing::after {
+    content: '|';
+    animation: blink 1s infinite;
+    margin-left: 2px;
+  }
+
+  @keyframes blink { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0;} }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .chat-input {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(0,0,0,0.1);
+  }
+  .chat-input input {
+    flex: 1;
+    border-radius: 25px;
+    border: none;
+    padding: 10px;
+    outline: none;
+  }
+  .chat-input button {
+    border: none;
+    background: #00c6ff;
+    color: #000;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .chat-input button:hover { transform: scale(1.05); }
+</style>
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
-  <h1 class="text-3xl font-bold mb-6">🤖 AI Chatbot</h1>
-  
-  <div class="w-full max-w-lg bg-gray-800 p-4 rounded-xl shadow-lg">
-    <div id="chatbox" class="h-96 overflow-y-auto mb-4 p-3 bg-gray-700 rounded"></div>
-    
-    <div class="flex">
-      <input id="userInput" type="text" placeholder="Type your question..." 
-             class="flex-grow p-2 rounded-l bg-gray-600 text-white focus:outline-none">
-      <button onclick="sendMessage()" class="px-4 py-2 bg-blue-500 rounded-r">Send</button>
-    </div>
+<body>
+
+<!-- Floating Chat Button -->
+<div id="chat-btn">💬 Chat AI</div>
+
+<!-- Chatbox -->
+<div id="chat-box">
+  <div class="chat-header">🤖 AI Assistant <span id="close-chat">✖</span></div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type your message..." />
+    <button id="chatSend">Send</button>
   </div>
+</div>
 
-  <script>
-    const chatbox = document.getElementById("chatbox");
-    function sendMessage() {
-      const input = document.getElementById("userInput");
-      const msg = input.value.trim();
-      if(msg === "") return;
-      
-      chatbox.innerHTML += `<p><b>You:</b> ${msg}</p>`;
-      input.value = "";
+<script>
+const chatBtn = document.getElementById("chat-btn");
+const chatBox = document.getElementById("chat-box");
+const closeChat = document.getElementById("close-chat");
+const chatMessages = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const chatSend = document.getElementById("chatSend");
 
-      // Simple AI response
-      setTimeout(() => {
-        chatbox.innerHTML += `<p><b>Bot:</b> I'm still learning, but I can help you with MBBS resources!</p>`;
-        chatbox.scrollTop = chatbox.scrollHeight;
-      }, 800);
-    }
-  </script>
+const OPENAI_API_KEY = "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"; // Replace with your key
+
+// Open chat
+chatBtn.addEventListener("click", () => { chatBox.classList.add("active"); });
+// Close chat
+closeChat.addEventListener("click", () => { chatBox.classList.remove("active"); });
+
+// Add message
+function addMessage(text, className) {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", className);
+  msgDiv.textContent = text;
+  chatMessages.appendChild(msgDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return msgDiv;
+}
+
+// Send message
+async function sendMessage() {
+  const text = chatInput.value.trim();
+  if(!text) return;
+
+  addMessage(text, "user-msg");
+  chatInput.value = "";
+
+  const typingDiv = addMessage("Typing...", "ai-msg typing");
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{role:"user", content:text}],
+        max_tokens: 200
+      })
+    });
+
+    const data = await response.json();
+    const aiText = data.choices[0].message.content.trim();
+
+    typingDiv.classList.remove("typing");
+    typingDiv.textContent = aiText;
+
+  } catch(err) {
+    typingDiv.classList.remove("typing");
+    typingDiv.textContent = "❌ Error: Could not fetch response.";
+    console.error(err);
+  }
+}
+
+chatSend.addEventListener("click", sendMessage);
+chatInput.addEventListener("keypress", e => { if(e.key === "Enter") sendMessage(); });
+</script>
+
 </body>
 </html>
